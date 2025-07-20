@@ -12,32 +12,7 @@ object TilingCalculator {
   
   /** Compte récursivement les pavages possibles */
   private def countTilings(width: Int, height: Int): Long = {
-    // Utilisation de la programmation dynamique avec mémoïsation
-    val memo = scala.collection.mutable.Map[(Int, Int), Long]()
-    
-    def count(w: Int, h: Int): Long = {
-      if (w == 0 || h == 0) 1L
-      else if (w < 0 || h < 0) 0L
-      else {
-        memo.getOrElseUpdate((w, h), {
-          if (w == 1 && h == 1) 0L // Une seule case ne peut pas être pavée
-          else if (w == 1) {
-            if (h % 2 == 0) 1L else 0L // Colonne unique : pavage possible si hauteur paire
-          }
-          else if (h == 1) {
-            if (w % 2 == 0) 1L else 0L // Ligne unique : pavage possible si largeur paire
-          }
-          else {
-            // Cas général : placement horizontal ou vertical du premier bloc
-            val horizontal = count(w - 2, h) + count(w, h - 2)
-            val vertical = if (w >= 2 && h >= 1) count(w - 1, h - 2) else 0L
-            horizontal + vertical
-          }
-        })
-      }
-    }
-    
-    // Pour un calcul plus précis, utilisons la formule de récurrence
+    // Pour un calcul précis, utilisons la formule de récurrence
     calculateWithRecurrence(width, height)
   }
   

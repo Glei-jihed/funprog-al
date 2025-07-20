@@ -42,7 +42,7 @@ class LedPanelSimulator(initialPanel: Panel) {
         // Exécuter les instructions de cette étape
         executeStepInstructions(panel, stepInstructions) match {
           case Success(newPanel) =>
-            val newHistory = recordLedChanges(updatedHistory, panel, newPanel, stepTime)
+            val newHistory = recordLedChanges(updatedHistory, panel, newPanel)
             executeSteps(newPanel, remainingSteps, stepTime, newHistory)
           case Failure(exception) => Failure(exception)
         }
@@ -96,8 +96,7 @@ class LedPanelSimulator(initialPanel: Panel) {
   private def recordLedChanges(
     history: Map[Position, List[LedEvent]], 
     oldPanel: Panel, 
-    newPanel: Panel, 
-    time: Int
+    newPanel: Panel
   ): Map[Position, List[LedEvent]] = {
     
     newPanel.allPositions.foldLeft(history) { (acc, position) =>

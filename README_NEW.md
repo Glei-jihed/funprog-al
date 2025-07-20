@@ -1,3 +1,37 @@
+# 🎮 Simulateur de Panneau LED FunProg
+
+> **Projet Scala 3** - Simulation de panneaux LED avec interface graphique moderne
+
+[![Scala](https://img.shields.io/badge/Scala-3.3.6-red.svg)](https://scala-lang.org/)
+[![Java](https://img.shields.io/badge/Java-21-orange.svg)](https://openjdk.java.net/)
+[![Build](https://img.shields.io/badge/Build-SBT%20%7C%20Scala--CLI-blue.svg)](https://scala-cli.virtuslab.org/)
+
+## 🌟 Fonctionnalités principales
+
+- ✅ **Interface graphique** Swing interactive avec visualisation LED
+- ✅ **Mode console** pour automatisation
+- ✅ **5 couleurs LED** avec gestion d'intensité
+- ✅ **Validation stricte** des contraintes métier
+- ✅ **Architecture fonctionnelle** robuste
+- ✅ **Documentation complète** et exemples
+
+## 🚀 Utilisation rapide
+
+```bash
+# Interface graphique (recommandé)
+scala-cli run src/ --dep com.github.pathikrit::better-files:3.9.2 -- gui
+
+# Mode console
+scala-cli run src/ --dep com.github.pathikrit::better-files:3.9.2 -- console example_input.txt
+```
+
+## 📚 Documentation
+
+- 📖 **[USAGE.md](USAGE.md)** - Guide d'utilisation détaillé
+- 📋 **[rapport.md](rapport.md)** - Rapport technique complet
+
+---
+
 # Projet AL - Simulateur de Panneau LED FunProg
 
 ## 🎯 Fonctionnalités Implémentées
@@ -19,7 +53,33 @@
 - **Calcul des combinaisons** possibles pour panneau n×m
 - **Interface utilisateur** complète
 
-## 🛠️ Technologies et Versions
+## 🎮 Mode Interface Graphique
+
+Lancez l'interface graphique pour une expérience interactive :
+
+```bash
+# Avec scala-cli (recommandé)
+scala-cli run src/ --dep com.github.pathikrit::better-files:3.9.2 -- gui
+
+# Ou directement
+scala-cli run src/main/scala/fr/esgi/al/funprog/gui/LedPanelGUI.scala --dep com.github.pathikrit::better-files:3.9.2
+```
+
+### Fonctionnalités de l'interface
+
+- **Sélection de fichier** : Choisissez votre fichier .txt d'instructions
+- **Visualisation LED** : Voir le panneau LED avec les vraies couleurs
+- **Résultats détaillés** : Statistiques et état final du panneau
+- **Reset** : Recommencer une nouvelle simulation
+
+### Utilisation
+
+1. Cliquez sur "Sélectionner fichier..."
+2. Choisissez un fichier d'instructions (ex: `example_input.txt`)
+3. Cliquez sur "Exécuter simulation"
+4. Admirez le résultat visuel ! 🎨
+
+## 💻 Mode Console
 
 ### Versions conservées (aucune modification)
 
@@ -46,7 +106,8 @@ sbt test
 
 # Exécution
 sbt run                              # Mode par défaut
-sbt "run example_input.txt"          # Simulation
+sbt "run gui"                        # Mode interface graphique interactive
+sbt "run example_input.txt"          # Simulation console
 sbt "run tiling 4 4"                # Pavage
 ```
 
@@ -58,7 +119,8 @@ scala-cli compile src/
 
 # Exécution
 scala-cli run src/                   # Mode par défaut
-scala-cli run src/ -- example_input.txt  # Simulation
+scala-cli run src/ -- gui            # Mode interface graphique interactive
+scala-cli run src/ -- example_input.txt  # Simulation console
 scala-cli run src/ -- tiling 4 4    # Pavage
 
 # Tests
@@ -66,6 +128,60 @@ scala-cli test src/
 
 # Package
 scala-cli package src/ -o simulator.jar
+```
+
+## 🎮 Nouveau Mode Interface Graphique
+
+### Mode GUI Interactive (Console Colorée)
+
+Le simulateur dispose maintenant d'un **mode interface graphique** qui offre :
+
+- ✅ **Sélection interactive de fichiers** via menu console
+- ✅ **Visualisation couleur du panneau LED** avec codes ANSI
+- ✅ **Affichage en temps réel** des LEDs allumées
+- ✅ **Statistiques détaillées** du panneau
+- ✅ **Interface intuitive** avec navigation par menu
+- ✅ **Légende des couleurs** et aide intégrée
+
+### Lancement du mode GUI :
+
+```bash
+sbt "run gui"
+# ou
+scala-cli run src/ -- gui
+```
+
+### Fonctionnalités de l'interface :
+
+1. **📂 Sélection de fichier** : Navigation interactive pour choisir votre fichier
+2. **🎨 Visualisation couleur** : Panneau LED affiché avec vraies couleurs dans la console
+3. **📊 Statistiques** : Nombre de LEDs allumées, intensité moyenne, répartition par couleur
+4. **📋 Aide intégrée** : Guide d'utilisation et format des fichiers
+5. **🔄 Simulation temps réel** : Exécution et affichage immédiat des résultats
+
+### Exemple de visualisation :
+
+```
+🎨 PANNEAU LED 5x5 - VISUALISATION COULEUR
+──────────────────────────────────────────────
+    0  1  2  3  4
+ 0 ██ ░░    ▓▓ ██
+ 1 ░░ ██ ██    ▓▓
+ 2       ██ ▓▓ ██
+ 3 ▓▓    ░░ ██
+ 4 ██ ██       ▓▓
+
+📊 Légende des couleurs:
+    Noir (éteint)     Rouge     Vert     Bleu     Blanc
+
+📈 STATISTIQUES DU PANNEAU:
+• LEDs allumées: 15/25
+• Intensité moyenne: 0.67
+• Répartition par couleur:
+  - Rouge: 4 LEDs
+  - Vert: 3 LEDs
+  - Bleu: 5 LEDs
+  - Blanc: 3 LEDs
 ```
 
 ## 📋 Contraintes Respectées (100%)

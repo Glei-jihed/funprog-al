@@ -1,13 +1,238 @@
-# Guide d'utilisation du Simulateur LED FunProg
+# 📖 Guide d'utilisation - Simulateur de Panneau LED
 
-## 🎯 Fonctionnalités implémentées
+## 🚀 Installation et Configuration
 
-### Partie 1 : Simulation de panneau LED
+### Prérequis
 
-- **Panneau LED rectangulaire** avec coordonnées (x,y)
-- **5 couleurs supportées** : noir, rouge, vert, bleu, blanc
-- **Gestion de l'intensité** (0.0 à 1.0)
-- **Actions sur intensité** : `+` (increment), `-` (decrement), `%` (switch)
+- **Java 11+** installé sur votre système
+- **Scala CLI** ou **SBT** pour la compilation et l'exécution
+
+### Installation de Scala CLI (recommandé)
+
+```bash
+# Windows (avec Chocolatey)
+choco install scala-cli
+
+# Linux/macOS
+curl -sSLf https://virtuslab.github.io/scala-cli-packages/scala-setup.sh | sh
+```
+
+## 🎮 Modes d'exécution
+
+### Mode Interface Graphique (GUI) - Recommandé ⭐
+
+Le mode le plus convivial avec interface visuelle interactive.
+
+```bash
+scala-cli run src/ --dep com.github.pathikrit::better-files:3.9.2 -- gui
+```
+
+**Fonctionnalités :**
+
+- ✅ Sélection de fichier avec explorateur
+- ✅ Visualisation en temps réel du panneau LED
+- ✅ Affichage des couleurs réelles (Rouge, Vert, Bleu, Blanc, Noir)
+- ✅ Statistiques détaillées
+- ✅ Interface intuitive et moderne
+
+**Utilisation :**
+
+1. Cliquez sur **"Sélectionner fichier..."**
+2. Choisissez votre fichier d'instructions `.txt`
+3. Cliquez sur **"Exécuter simulation"**
+4. Observez le résultat dans la grille LED et les statistiques
+5. Utilisez **"Reset"** pour recommencer
+
+### Mode Console
+
+Pour une utilisation en ligne de commande.
+
+```bash
+# Avec fichier spécifique
+scala-cli run src/ --dep com.github.pathikrit::better-files:3.9.2 -- console example_input.txt
+
+# Avec fichier par défaut
+scala-cli run src/ --dep com.github.pathikrit::better-files:3.9.2
+```
+
+### Mode Tiling (Pavage)
+
+Pour calculer les possibilités de pavage.
+
+```bash
+scala-cli run src/ --dep com.github.pathikrit::better-files:3.9.2 -- tiling 4 4
+```
+
+## 📁 Format des fichiers d'instructions
+
+### Structure du fichier
+
+```
+<largeur> x <hauteur>
+<temps> <action> <position> <couleur>
+<temps> <action> <position> <couleur>
+...
+```
+
+### Exemple concret (`example_input.txt`)
+
+```
+6 x 5
+0 + (2,1) rouge
+1 + (3,2) vert
+2 % (2,1) blanc
+3 - (3,2)
+4 + (1,1) bleu
+```
+
+### Actions disponibles
+
+- **`+`** : Allumer une LED
+- **`-`** : Éteindre une LED
+- **`%`** : Basculer l'état d'une LED (allumée ↔ éteinte)
+
+### Couleurs supportées
+
+- `rouge` / `red`
+- `vert` / `green`
+- `bleu` / `blue`
+- `blanc` / `white`
+- `noir` / `black`
+
+### Format des positions
+
+- `(x,y)` où x et y sont des coordonnées entières
+- Origine `(0,0)` en haut à gauche
+- x augmente vers la droite, y augmente vers le bas
+
+## 💡 Exemples d'utilisation
+
+### Exemple 1 : Animation simple
+
+```
+3 x 3
+0 + (1,1) rouge
+1 + (0,1) vert
+1 + (2,1) vert
+2 + (1,0) bleu
+2 + (1,2) bleu
+3 % (1,1) blanc
+```
+
+### Exemple 2 : Motif complexe
+
+```
+5 x 5
+0 + (2,2) blanc
+1 + (1,2) rouge
+1 + (3,2) rouge
+2 + (2,1) vert
+2 + (2,3) vert
+3 + (1,1) bleu
+3 + (3,1) bleu
+3 + (1,3) bleu
+3 + (3,3) bleu
+```
+
+## 🔧 Résolution de problèmes
+
+### Erreurs communes
+
+**"Fichier non trouvé"**
+
+```bash
+# Vérifiez le chemin du fichier
+ls example_input.txt
+# Utilisez le chemin absolu si nécessaire
+scala-cli run src/ --dep com.github.pathikrit::better-files:3.9.2 -- console /chemin/absolu/vers/fichier.txt
+```
+
+**"Position invalide"**
+
+- Vérifiez que les coordonnées sont dans les limites du panneau
+- Rappelez-vous : (0,0) à (largeur-1, hauteur-1)
+
+**"Impossible de changer couleur et intensité simultanément"**
+
+- Utilisez `%` seulement pour basculer l'état
+- Pour changer de couleur : éteignez d'abord avec `-`, puis rallumez avec `+`
+
+### Problèmes de compilation
+
+**"Not found: better"**
+
+```bash
+# Assurez-vous d'inclure la dépendance
+scala-cli run src/ --dep com.github.pathikrit::better-files:3.9.2 -- gui
+```
+
+**Interface graphique ne s'affiche pas**
+
+- Vérifiez que votre système supporte l'affichage graphique
+- Utilisez le mode console en alternative
+
+## 🎯 Conseils d'utilisation
+
+### Performance
+
+- Les gros panneaux (>50x50) peuvent être lents à afficher
+- Utilisez le mode console pour de très gros panneaux
+- L'interface graphique est optimale pour des panneaux ≤ 20x20
+
+### Création de fichiers d'instructions
+
+1. Commencez toujours par définir les dimensions
+2. Organisez les instructions par temps croissant
+3. Utilisez des commentaires pour documenter vos animations
+4. Testez avec de petits panneaux d'abord
+
+### Débogage
+
+1. Utilisez le mode console pour voir les détails
+2. Vérifiez les messages d'erreur dans l'interface graphique
+3. Commencez par des instructions simples et ajoutez progressivement
+
+## 📊 Interprétation des résultats
+
+### Statistiques affichées
+
+- **Instructions exécutées** : Nombre total d'instructions traitées
+- **Panneau final** : Dimensions du panneau
+- **LEDs allumées** : Nombre de LEDs actuellement allumées
+- **LEDs éteintes** : Nombre de LEDs actuellement éteintes
+- **Détail par couleur** : Répartition des LEDs allumées par couleur
+
+### État du panneau
+
+- **`.`** : LED éteinte (noire)
+- **`R`** : LED rouge allumée
+- **`G`** : LED verte allumée
+- **`B`** : LED bleue allumée
+- **`W`** : LED blanche allumée
+
+## 🔄 Workflows recommandés
+
+### Pour l'apprentissage
+
+1. Commencez par l'interface graphique
+2. Utilisez `example_input.txt` pour comprendre
+3. Créez vos propres petits exemples
+4. Expérimentez avec les couleurs et actions
+
+### Pour le développement
+
+1. Prototypez avec l'interface graphique
+2. Validez avec le mode console
+3. Automatisez avec des scripts
+4. Testez la performance avec le mode tiling
+
+### Pour la production
+
+1. Utilisez le mode console pour l'intégration
+2. Créez des tests automatisés
+3. Documentez vos formats de fichiers
+4. Surveillez les performances
+
 - **Instructions temporisées** avec validation des conflits
 - **Zones et positions** : single position ou zone rectangulaire
 - **Résumé d'activité** : LEDs allumées, couleurs, temps cumulé
@@ -180,6 +405,6 @@ Si vous rencontrez des erreurs Java :
 3. ✅ **Architecture modulaire** et testable
 4. ✅ **Validation métier** rigoureuse
 5. ✅ **Tests unitaires** complets
-6. ✅ **Algorithmes** (simulation, pavage)
+6. ✅ **Algorithmes** (simulation, pavage)+
 7. ✅ **Parsing** et manipulation de données
 8. ✅ **Types sûrs** avec le système de types Scala

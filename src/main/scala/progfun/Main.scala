@@ -1,6 +1,5 @@
 package fr.esgi.al.funprog
 
-import better.files._
 import scala.util.{Try, Success, Failure}
 import fr.esgi.al.funprog.parser.InstructionParser
 import fr.esgi.al.funprog.simulator.LedPanelSimulator
@@ -11,17 +10,25 @@ def Main(args: String*): Unit = {
   println("=== Simulateur de Panneau LED FunProg ===")
   
   args.toList match {
+    case List("gui") =>
+      // Mode interface graphique
+      runGUIMode()
+      
+    case List("console", filePath) =>
+      // Mode simulation console avec fichier spécifié
+      runSimulationMode(filePath)
+      
     case List("tiling", widthStr, heightStr) =>
       // Mode pavage (Partie 2)
       runTilingMode(widthStr, heightStr)
       
     case List(filePath) =>
-      // Mode simulation (Partie 1)
+      // Mode simulation (Partie 1) - fichier direct
       runSimulationMode(filePath)
       
     case Nil =>
       // Mode par défaut avec fichier d'exemple
-      val defaultFile = "c:\\Users\\Jihed\\Desktop\\funprog-al\\example_input.txt"
+      val defaultFile = "example_input.txt"
       println(s"Aucun argument fourni, utilisation du fichier d'exemple: $defaultFile")
       runSimulationMode(defaultFile)
       
@@ -69,15 +76,38 @@ private def runTilingMode(widthStr: String, heightStr: String): Unit = {
   }
 }
 
+/** Mode interface graphique */
+private def runGUIMode(): Unit = {
+  println("Lancement de l'interface graphique...")
+  try {
+    // Créer dynamiquement la classe GUI
+    val guiClass = Class.forName("fr.esgi.al.funprog.gui.LedPanelGUI$")
+    val guiObject = guiClass.getField("MODULE$").get(null)
+    val launchMethod = guiClass.getMethod("launch")
+    launchMethod.invoke(guiObject): Unit
+  } catch {
+    case e: Exception =>
+      println(s"Erreur lors du lancement de l'interface graphique: ${e.getMessage}")
+      println("L'interface graphique n'est pas disponible. Utilisez le mode console.")
+      println("Exemples d'utilisation:")
+      println("  - Mode console: scala-cli run . -- console example_input.txt")
+      println("  - Mode tiling: scala-cli run . -- tiling example_input.txt 10 8")
+      printUsage()
+  }
+}
+
 /** Affiche l'usage du programme */
 private def printUsage(): Unit = {
   println("""
 Usage:
-  sbt "run <fichier_instructions>"           # Mode simulation
-  sbt "run tiling <largeur> <hauteur>"      # Mode pavage
-  sbt run                                   # Mode simulation avec fichier par défaut
+  sbt "run gui"                             # Mode interface graphique
+  sbt "run <fichier_instructions>"          # Mode simulation console
+  sbt "run tiling <largeur> <hauteur>"     # Mode pavage
+  sbt run                                  # Mode simulation avec fichier par défaut
 
 Exemples:
+  sbt "run gui"
+  sbt "run example_input.txt"
   sbt "run /tmp/input.txt"
   sbt "run tiling 4 4"
   """)

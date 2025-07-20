@@ -5,3 +5,4 @@ object Dependencies {
   lazy val munit = "org.scalameta" %% "munit" % "1.1.1"
   lazy val scalatic = "org.scalactic" %% "scalactic" % "3.2.19"
 }
+
