@@ -12,11 +12,12 @@ object InstructionParser {
     Try {
       val file = File(filePath)
       if (!file.exists) {
-        throw new IllegalArgumentException(s"Fichier non trouvé: $filePath")
+        Failure(new IllegalArgumentException(s"Fichier non trouvé: $filePath"))
+      } else {
+        val lines = file.lines.toList.filter(_.trim.nonEmpty)
+        Success(lines)
       }
-      val lines = file.lines.toList.filter(_.trim.nonEmpty)
-      parseLines(lines)
-    }.flatten
+    }.flatten.flatMap(parseLines)
   }
   
   /** Parse les lignes d'un fichier d'instructions */
@@ -88,10 +89,11 @@ object InstructionParser {
           val color = Color(r, g, b)
           
           if (!Color.isValid(color)) {
-            throw new IllegalArgumentException(s"Couleur invalide: $colorStr")
+            Failure(new IllegalArgumentException(s"Couleur invalide: $colorStr"))
+          } else {
+            Success(color)
           }
-          color
-        }.recoverWith {
+        }.flatten.recoverWith {
           case _: NumberFormatException => 
             Failure(new IllegalArgumentException(s"Format de couleur invalide: $colorStr"))
         }

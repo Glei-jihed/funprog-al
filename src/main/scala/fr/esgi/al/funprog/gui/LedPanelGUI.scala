@@ -29,7 +29,7 @@ class LedPanelGUI extends JFrame("LED Panel Simulator") {
   )
   
   setSize(800, 600)
-  setLocationRelativeTo(null)
+  setLocationRelativeTo(this.getParent)
   setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
   
   // Composants
